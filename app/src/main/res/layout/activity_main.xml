@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.jose.filtroritmo.MainActivity">
+
+    <Button
+        android:id="@+id/camara"
+        android:layout_width="163dp"
+        android:layout_height="155dp"
+        android:background="@drawable/camera"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="178dp" />
+
+    <Button
+        android:id="@+id/galeria"
+        android:layout_width="176dp"
+        android:layout_height="159dp"
+        android:background="@drawable/gallery"
+        tools:layout_editor_absoluteX="192dp"
+        tools:layout_editor_absoluteY="176dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jose Gonzalez Alvarado"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="461dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sergie Salas Rojas"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="478dp" />
+</android.support.constraint.ConstraintLayout>
