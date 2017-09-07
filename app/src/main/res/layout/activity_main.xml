@@ -8,33 +8,56 @@
 
     <Button
         android:id="@+id/camara"
+        android:onClick="botonCamara"
         android:layout_width="163dp"
         android:layout_height="155dp"
         android:background="@drawable/camera"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="178dp" />
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintVertical_bias="0.471" />
 
     <Button
         android:id="@+id/galeria"
-        android:layout_width="176dp"
+        android:onClick="botonGaleria"
+        android:layout_width="0dp"
         android:layout_height="159dp"
         android:background="@drawable/gallery"
-        tools:layout_editor_absoluteX="192dp"
-        tools:layout_editor_absoluteY="176dp" />
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/camara"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/camara"
+        android:layout_marginRight="5dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Jose Gonzalez Alvarado"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="461dp" />
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="33dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sergie Salas Rojas"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="478dp" />
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/textView" />
+
 </android.support.constraint.ConstraintLayout>

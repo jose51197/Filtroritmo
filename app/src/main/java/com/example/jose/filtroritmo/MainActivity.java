@@ -12,8 +12,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        Button camara=(Button) findViewById(R.id.camara);
-        Button galeria=(Button) findViewById(R.id.galeria);
 
 
     }
