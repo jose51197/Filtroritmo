@@ -16,10 +16,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void botonCamara(View view){
-        //llamo a la camra
+
     }
 
     public void botonGaleria(View view){
-        //llamo a la galeria
+
     }
 }

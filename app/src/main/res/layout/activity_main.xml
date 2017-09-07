@@ -46,9 +46,9 @@
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="33dp"
+        android:layout_marginBottom="444dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="-220dp" />
 
     <TextView
         android:id="@+id/textView2"
