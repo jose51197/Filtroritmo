@@ -33,6 +33,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void botonGaleria(View view){
-
+        //Sergie
     }
 }
