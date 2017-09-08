@@ -35,7 +35,8 @@
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toRightOf="@+id/camara"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
         android:id="@+id/textView"
