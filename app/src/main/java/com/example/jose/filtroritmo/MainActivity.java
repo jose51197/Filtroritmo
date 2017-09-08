@@ -8,6 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
+
+
+
+
+
+
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -33,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void botonGaleria(View view){
-        //Sergie
+        Intent openGalleryIntent = new Intent (Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        openGalleryIntent.setType("image/*");
+
     }
 }
