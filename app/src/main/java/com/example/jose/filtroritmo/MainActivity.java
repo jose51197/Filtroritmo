@@ -43,6 +43,6 @@ public class MainActivity extends AppCompatActivity {
     public void botonGaleria(View view){
         Intent openGalleryIntent = new Intent (Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         openGalleryIntent.setType("image/*");
-
+        openGalleryIntent.setAction(Intent.ACTION_GET_CONTENT);
     }
 }
