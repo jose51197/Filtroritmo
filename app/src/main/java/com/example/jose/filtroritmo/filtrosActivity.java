@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -224,21 +225,26 @@ public class filtrosActivity extends AppCompatActivity {
             saveImage(this.imagen, dateFormat.format(date) + "Filtrada");
         }
     }
-    private void saveImage(Bitmap finalBitmap,String Nombre) {
-        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+    private void saveImage(Bitmap finalBitmap,String filename) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/filtro");
         myDir.mkdirs();
-        String fname = "Image-" + Nombre + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists())
-            file.delete();
+        String fname = filename;
+        File file = new File (myDir, fname);
+        if (file.exists ()) file.delete ();
         try {
-            FileOutputStream out = new FileOutputStream(file);//esta es la parte que esta fallando x alguna razon
+            file.createNewFile();
+        } catch (IOException e) {
+            System.out.println("error al crear");
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(file);
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
             out.flush();
             out.close();
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         MediaScannerConnection.scanFile(this, new String[] { file.toString() }, null,
