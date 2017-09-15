@@ -85,6 +85,7 @@ public class filtrosActivity extends AppCompatActivity {
         System.out.println("Aplicado average");
         setImagen(filtrada);
     }
+    //para quedar con todo al dia
     public void desaturation(View view){
         Bitmap filtrada=this.imagen.copy(this.imagen.getConfig(),true);
         int ancho = filtrada.getWidth();
