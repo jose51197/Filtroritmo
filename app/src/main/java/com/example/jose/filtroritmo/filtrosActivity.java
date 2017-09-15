@@ -2,6 +2,7 @@ package com.example.jose.filtroritmo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -35,8 +36,13 @@ public class filtrosActivity extends AppCompatActivity {
     //seteo la imagen a la clase que pase en el intent anterior
     public void getImagen() {
         Intent intent = getIntent();
-        this.imagen = (Bitmap) intent.getParcelableExtra("imagen");
-        setImagen(this.imagen);
+        String path=intent.getExtras().getString("path");
+        File imgFile = new  File(path);
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            this.imagen =myBitmap;
+            setImagen(this.imagen);
+        }
     }
 
     //setea imagenes filtradas en el widget
