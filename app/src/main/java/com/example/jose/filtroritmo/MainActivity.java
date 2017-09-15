@@ -21,14 +21,10 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private final int SELECT_IMAGE =2;
-    private Bitmap imageSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-
     }
     public void botonCamara(View view){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -42,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap fotoTomada= (Bitmap) extras.get("data");
-            //Intent
+            Intent filtro = new Intent(this, filtrosActivity.class);
+            filtro.putExtra("imagen",fotoTomada);
+            startActivity(filtro);
         }
         if(requestCode==SELECT_IMAGE && resultCode == RESULT_OK && data!=null){
             Uri imagenElegida = data.getData();
