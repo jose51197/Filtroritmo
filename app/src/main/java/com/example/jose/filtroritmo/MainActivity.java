@@ -35,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, 1);
         }
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap fotoTomada= (Bitmap) extras.get("data");
+            //Intent
         }
         if(requestCode==SELECT_IMAGE && resultCode == RESULT_OK && data!=null){
             Uri imagenElegida = data.getData();
