@@ -1,18 +1,29 @@
 package com.example.jose.filtroritmo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class filtrosActivity extends AppCompatActivity {
     Bitmap imagen;
+    Bitmap imagenFiltrada=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +40,16 @@ public class filtrosActivity extends AppCompatActivity {
     public void setImagen(Bitmap imagen){
         ImageView imagensita = (ImageView)findViewById(R.id.imageView);
         imagensita.setImageBitmap(imagen);
+        this.imagenFiltrada=imagen;
+    }
+    public void guardarAmbas(View view){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        saveImage(this.imagen,dateFormat.format(date)+"Original");
+        if (imagenFiltrada!=null){
+            saveImage(this.imagen,dateFormat.format(date)+"Filtrada");
+        }
+
     }
     public void dM(View view){
         Bitmap filtrada=this.imagen.copy(this.imagen.getConfig(),true);
@@ -115,6 +136,36 @@ public class filtrosActivity extends AppCompatActivity {
             return b;
         }
         return a;
+    }
+    private void saveImage(Bitmap finalBitmap,String Nombre) {
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        File myDir = new File(root + "/filtro");
+        myDir.mkdirs();
+        String fname = "Image-" + Nombre + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+        MediaScannerConnection.scanFile(this, new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+
     }
 
 
