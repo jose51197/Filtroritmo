@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
             String filePath = cursor.getString(columnIndex);
             cursor.close();
             Bitmap yourSelectedImage  = BitmapFactory.decodeFile(filePath);
+            Intent filtro = new Intent(this, filtrosActivity.class);
+            filtro.putExtra("imagen",yourSelectedImage);
+            startActivity(filtro);
         }
     }
 
