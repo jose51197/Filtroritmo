@@ -43,6 +43,7 @@ public class filtrosActivity extends AppCompatActivity {
     public void setImagen(Bitmap imagen) {
         ImageView imagensita = (ImageView) findViewById(R.id.imageView);
         imagensita.setImageBitmap(imagen);
+        this.imagenFiltrada=imagen;
     }
 
     public void dM(View view) {
@@ -218,11 +219,11 @@ public class filtrosActivity extends AppCompatActivity {
         return Color.rgb(rojo, verde, azul);
     }
     public void guardarAmbas(View view) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HH:mm:ss");
         Date date = new Date();
-        saveImage(this.imagen, dateFormat.format(date) + "Original");
+        saveImage(this.imagen,  dateFormat.format(date)+ "Original");
         if (this.imagenFiltrada != null) {
-            saveImage(this.imagen, dateFormat.format(date) + "Filtrada");
+            saveImage(this.imagenFiltrada, dateFormat.format(date) + "Filtrada");
         }
     }
     private void saveImage(Bitmap finalBitmap,String filename) {
@@ -230,7 +231,7 @@ public class filtrosActivity extends AppCompatActivity {
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/filtro");
         myDir.mkdirs();
-        String fname = filename;
+        String fname = filename+".jpg";
         File file = new File (myDir, fname);
         if (file.exists ()) file.delete ();
         try {
