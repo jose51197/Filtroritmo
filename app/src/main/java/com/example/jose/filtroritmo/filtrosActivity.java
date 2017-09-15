@@ -8,6 +8,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,10 @@ public class filtrosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filtros);
         getImagen();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
     //seteo la imagen a la clase que pase en el intent anterior
@@ -173,6 +178,7 @@ public class filtrosActivity extends AppCompatActivity {
         int sumaCampana;
         int[] kernel = new int[9];
         for (i = 0; i < altura; i++) {
+            System.out.println("Pussy: "+String.valueOf(altura-i));
             for (j = 0; j < ancho; j++) {
                 jsuma = -2;
                 isuma = -1;
@@ -200,45 +206,45 @@ public class filtrosActivity extends AppCompatActivity {
         int azul = 0;
         int verde = 0;
         int[] kernelProcedure = new int[9];
-        kernelProcedure[0] = Color.red(kernel[0]);
-        kernelProcedure[1] = Color.red(kernel[1]) * 2;
-        kernelProcedure[2] = Color.red(kernel[2]);
-        kernelProcedure[3] = Color.red(kernel[3]) * 2;
-        kernelProcedure[4] = Color.red(kernel[4]) * 4;
-        kernelProcedure[5] = Color.red(kernel[5]) * 2;
-        kernelProcedure[6] = Color.red(kernel[6]);
-        kernelProcedure[7] = Color.red(kernel[7]) * 2;
-        kernelProcedure[8] = Color.red(kernel[8]);
+        kernelProcedure[0] = Color.red(kernel[0])*4;
+        kernelProcedure[1] = Color.red(kernel[1]) * 8;
+        kernelProcedure[2] = Color.red(kernel[2])*4;
+        kernelProcedure[3] = Color.red(kernel[3]) * 8;
+        kernelProcedure[4] = Color.red(kernel[4]) * 16;
+        kernelProcedure[5] = Color.red(kernel[5]) * 8;
+        kernelProcedure[6] = Color.red(kernel[6])*4;
+        kernelProcedure[7] = Color.red(kernel[7]) * 8;
+        kernelProcedure[8] = Color.red(kernel[8])*4;
         for (int i = 0; i < 9; i++) {
             rojo += kernelProcedure[i];
         }
-        rojo = rojo / 16;
-        kernelProcedure[0] = Color.green(kernel[0]);
-        kernelProcedure[1] = Color.green(kernel[1]) * 2;
-        kernelProcedure[2] = Color.green(kernel[2]);
-        kernelProcedure[3] = Color.green(kernel[3]) * 2;
-        kernelProcedure[4] = Color.green(kernel[4]) * 4;
-        kernelProcedure[5] = Color.green(kernel[5]) * 2;
-        kernelProcedure[6] = Color.green(kernel[6]);
-        kernelProcedure[7] = Color.green(kernel[7]) * 2;
-        kernelProcedure[8] = Color.green(kernel[8]);
+        rojo = rojo / 64;
+        kernelProcedure[0] = Color.green(kernel[0])*4;
+        kernelProcedure[1] = Color.green(kernel[1]) * 8;
+        kernelProcedure[2] = Color.green(kernel[2])*4;
+        kernelProcedure[3] = Color.green(kernel[3]) * 8;
+        kernelProcedure[4] = Color.green(kernel[4]) * 16;
+        kernelProcedure[5] = Color.green(kernel[5]) * 8;
+        kernelProcedure[6] = Color.green(kernel[6])*4;
+        kernelProcedure[7] = Color.green(kernel[7]) * 8;
+        kernelProcedure[8] = Color.green(kernel[8])*4;
         for (int i = 0; i < 9; i++) {
             verde += kernelProcedure[i];
         }
-        verde = verde / 16;
-        kernelProcedure[0] = Color.blue(kernel[0]);
-        kernelProcedure[1] = Color.blue(kernel[1]) * 2;
-        kernelProcedure[2] = Color.blue(kernel[2]);
-        kernelProcedure[3] = Color.blue(kernel[3]) * 2;
-        kernelProcedure[4] = Color.blue(kernel[4]) * 4;
-        kernelProcedure[5] = Color.blue(kernel[5]) * 2;
-        kernelProcedure[6] = Color.blue(kernel[6]);
-        kernelProcedure[7] = Color.blue(kernel[7]) * 2;
-        kernelProcedure[8] = Color.blue(kernel[8]);
+        verde = verde / 64;
+        kernelProcedure[0] = Color.blue(kernel[0])*4;
+        kernelProcedure[1] = Color.blue(kernel[1]) * 8;
+        kernelProcedure[2] = Color.blue(kernel[2])*4;
+        kernelProcedure[3] = Color.blue(kernel[3]) * 8;
+        kernelProcedure[4] = Color.blue(kernel[4]) * 16;
+        kernelProcedure[5] = Color.blue(kernel[5]) * 8;
+        kernelProcedure[6] = Color.blue(kernel[6])*4;
+        kernelProcedure[7] = Color.blue(kernel[7]) * 8;
+        kernelProcedure[8] = Color.blue(kernel[8])*4;
         for (int i = 0; i < 9; i++) {
             azul += kernelProcedure[i];
         }
-        azul = azul / 16;
+        azul = azul / 64;
         return Color.rgb(rojo, verde, azul);
     }
     public void guardarAmbas(View view) {
