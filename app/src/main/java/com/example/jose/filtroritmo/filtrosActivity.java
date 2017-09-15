@@ -40,9 +40,23 @@ public class filtrosActivity extends AppCompatActivity {
         File imgFile = new  File(path);
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            this.imagen =myBitmap;
+            this.imagen =getResizedBitmap(myBitmap,1080);
             setImagen(this.imagen);
         }
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     //setea imagenes filtradas en el widget
@@ -58,7 +72,9 @@ public class filtrosActivity extends AppCompatActivity {
         int altura = filtrada.getHeight();
         int actual;
         byte[] bytes;
+        System.out.println(String.valueOf(ancho)+","+String.valueOf(altura));
         for (int i = 0; i < ancho; i++) {
+            System.out.println("holi"+String.valueOf(ancho-i));
             for (int j = 0; j < altura; j++) {
                 actual = filtrada.getPixel(i, j);
                 bytes = ByteBuffer.allocate(4).putInt(actual).array();
@@ -98,6 +114,7 @@ public class filtrosActivity extends AppCompatActivity {
         int actual;
         byte[] bytes;
         for (int i = 0; i < ancho; i++) {
+            System.out.println("holi"+String.valueOf(ancho-i));
             for (int j = 0; j < altura; j++) {
                 actual = filtrada.getPixel(i, j);
                 bytes = ByteBuffer.allocate(4).putInt(actual).array();
