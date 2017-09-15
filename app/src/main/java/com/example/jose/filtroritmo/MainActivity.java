@@ -55,24 +55,26 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode==SELECT_IMAGE && resultCode == RESULT_OK && data!=null){
             Uri imagenElegida = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(imagenElegida , filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String filePath = cursor.getString(columnIndex);
-            cursor.close();
-            Bitmap yourSelectedImage  = BitmapFactory.decodeFile(filePath);
+            pictureImagePath= getRealPathFromURI(imagenElegida);
+            System.out.println("hola");
+            System.out.println(pictureImagePath);
             Intent filtro = new Intent(this, filtrosActivity.class);
-            filtro.putExtra("imagen",yourSelectedImage);
+            filtro.putExtra("path",pictureImagePath);
             startActivity(filtro);
         }
     }
 
+    public String getRealPathFromURI(Uri contentUri)
+    {
+        String[] proj = { MediaStore.Audio.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 
     public void botonGaleria(View view){
         Intent openGalleryIntent = new Intent (Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        openGalleryIntent.setType("image/*");
-        openGalleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(openGalleryIntent, "Select Picture"),SELECT_IMAGE);
     }
 }
