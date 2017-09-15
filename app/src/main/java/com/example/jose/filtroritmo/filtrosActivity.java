@@ -16,9 +16,13 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class filtrosActivity extends AppCompatActivity {
     Bitmap imagen;
+    Bitmap imagenFiltrada=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +215,14 @@ public class filtrosActivity extends AppCompatActivity {
         }
         azul = azul / 16;
         return Color.rgb(rojo, verde, azul);
+    }
+    public void guardarAmbas(View view) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        saveImage(this.imagen, dateFormat.format(date) + "Original");
+        if (this.imagenFiltrada != null) {
+            saveImage(this.imagen, dateFormat.format(date) + "Filtrada");
+        }
     }
     private void saveImage(Bitmap finalBitmap,String Nombre) {
         String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
