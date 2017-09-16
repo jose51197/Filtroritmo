@@ -81,7 +81,7 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color = (byte) max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF));
+            color = (byte) max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF));
             //System.out.println(String.valueOf(color));
             bytes[i]= color;
             bytes[i+1]=color;
@@ -103,7 +103,7 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color = (byte) min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF));
+            color = (byte) min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF));
             //System.out.println(String.valueOf(color));
             bytes[i]= color;
             bytes[i+1]=color;
@@ -124,11 +124,11 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color = (byte) ((bytes[i+1] & 0xFF + bytes[i+2] & 0xFF + bytes[i+3] & 0xFF)-1/3);
+            color = (byte) ((bytes[i+1] & 0xFF + bytes[i+2] & 0xFF + bytes[i] & 0xFF)/3);
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
-            bytes[i+3]=color;
+            //bytes[i+3]=0;
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
@@ -144,7 +144,7 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF))) >> 1);
+            color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF))) >> 1);
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
