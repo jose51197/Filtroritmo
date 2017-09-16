@@ -188,7 +188,8 @@ public class filtrosActivity extends AppCompatActivity {
                 kernel[3]=0;
             }
 
-            kernel[4]=Color.rgb(bytes[i],bytes[i+1],bytes[i+2]);//pixel actual
+            kernel[4]=Color.rgb((bytes[i] & 0xFF),(bytes[i+1] & 0xFF),(bytes[i+2] & 0xFF));//pixel actual
+
             if(i+2+4<total){
                 kernel[5]=Color.rgb(bytes[i+4],bytes[i+1+4],bytes[i+2+4]);//pixel der
             }
