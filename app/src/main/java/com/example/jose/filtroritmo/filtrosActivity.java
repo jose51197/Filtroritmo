@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
@@ -45,7 +46,9 @@ public class filtrosActivity extends AppCompatActivity {
         File imgFile = new  File(path);
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            this.imagen =getResizedBitmap(myBitmap,1080);
+            if (myBitmap.getHeight()>1920 || myBitmap.getWidth()>1920){
+                this.imagen =getResizedBitmap(myBitmap,1920);
+            }
             setImagen(this.imagen);
         }
     }
@@ -79,8 +82,21 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes;
         System.out.println(String.valueOf(ancho)+","+String.valueOf(altura));
         for (int i = 0; i < ancho; i++) {
-            System.out.println("holi"+String.valueOf(ancho-i));
-            for (int j = 0; j < altura; j++) {
+            System.out.println("desat"+String.valueOf(ancho-i));
+            Runnable r = new threadDM(filtrada,i);
+            new Thread(r).start();
+        }
+        System.out.println("Aplicado desaturation");
+        setImagen(filtrada);
+    }
+    private class threadDM implements Runnable{
+        private Bitmap filtrada;
+        private int i;
+        @Override
+        public void run() {
+            int actual;
+            byte[] bytes;
+            for (int j = 0; j < filtrada.getHeight(); j++) {
                 actual = filtrada.getPixel(i, j);
                 bytes = ByteBuffer.allocate(4).putInt(actual).array();
                 actual = max(max((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF));
@@ -88,8 +104,11 @@ public class filtrosActivity extends AppCompatActivity {
                 filtrada.setPixel(i, j, actual);
             }
         }
-        System.out.println("Aplicado desaturation");
-        setImagen(filtrada);
+        //puntero a imagen y el i
+        public threadDM(Bitmap filtrada, int i) {
+            this.filtrada=filtrada;
+            this.i=i;
+        }
     }
 
     public void dm(View view) {
