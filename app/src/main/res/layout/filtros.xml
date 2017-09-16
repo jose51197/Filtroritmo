@@ -90,6 +90,13 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:text="Hotline" />
+            <Button
+                android:id="@+id/Original"
+                android:onClick="original"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Orig" />
 
 
 

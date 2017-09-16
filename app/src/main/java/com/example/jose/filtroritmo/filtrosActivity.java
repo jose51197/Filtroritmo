@@ -124,9 +124,9 @@ public class filtrosActivity extends AppCompatActivity {
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
             color = (byte) (((bytes[i+1] & 0xFF) + (bytes[i+2] & 0xFF) + (bytes[i] & 0xFF))/3);
-            bytes[i]= color;
-            bytes[i+1]=color;
-            bytes[i+2]=color;
+            bytes[i]= color;//rojo
+            bytes[i+1]=color;//verde
+            bytes[i+2]=color;//azul
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
@@ -165,13 +165,18 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytesFinales=buf.array().clone();
         int color;
         int[] kernel= new int[9];
+        int ianch;
+        int iancho;
+
         for (int i = 0; i < bytes.length; i+=4) {
             //bytes[i+1] & 0xFF
             //if no es primera fila
-            if(i-ancho-2>0){//ya se que agarra pixeles incorrectos a veces, me vale xD es parte del filtro
-                kernel[0]=Color.rgb(bytes[i-ancho-4],bytes[i-ancho+1-4],bytes[i-ancho+2-4]);//pi-anchoxel
-                kernel[1]=Color.rgb(bytes[i-ancho],bytes[i-ancho+1],bytes[i-ancho+2]);//pi-anchoxel
-                kernel[2]=Color.rgb(bytes[i-ancho+4],bytes[i-ancho+1+4],bytes[i-ancho+2+4]);//pi-anchoxel
+            ianch=i-ancho;
+            iancho=i+ancho;
+            if(ianch-4>0){//ya se que agarra pixeles incorrectos a veces, me vale xD es parte del filtro
+                kernel[0]=Color.rgb(bytes[ianch-4],bytes[ianch+1-4],bytes[ianch+2-4]);//pi-anchoxel
+                kernel[1]=Color.rgb(bytes[ianch],bytes[ianch+1],bytes[ianch+2]);//pi-anchoxel
+                kernel[2]=Color.rgb(bytes[ianch+4],bytes[ianch+1+4],bytes[ianch+2+4]);//pi-anchoxel
             }
             else{
                 kernel[0]=0;
@@ -194,10 +199,10 @@ public class filtrosActivity extends AppCompatActivity {
             }
 
 
-            if(i+ancho+4+2<total){
-                kernel[6]=Color.rgb(bytes[i+ancho-4],bytes[i+ancho+1-4],bytes[i+ancho+2-4]);//pi+anchoxel
-                kernel[7]=Color.rgb(bytes[i+ancho],bytes[i+ancho+1],bytes[i+ancho+2]);//pi+anchoxel
-                kernel[8]=Color.rgb(bytes[i+ancho+4],bytes[i+ancho+1+4],bytes[i+ancho+2+4]);//pi+anchoxel
+            if(iancho+4+2<total){
+                kernel[6]=Color.rgb(bytes[iancho-4],bytes[iancho+1-4],bytes[iancho+2-4]);//pi+anchoxel
+                kernel[7]=Color.rgb(bytes[iancho],bytes[iancho+1],bytes[iancho+2]);//pi+anchoxel
+                kernel[8]=Color.rgb(bytes[iancho+4],bytes[iancho+1+4],bytes[iancho+2+4]);//pi+anchoxel
             }
             else{
                 kernel[6]=0;
@@ -213,22 +218,25 @@ public class filtrosActivity extends AppCompatActivity {
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytesFinales);
         filtrada.copyPixelsFromBuffer(retBuf);
-        System.out.println("Aplicado desaturation");
+        System.out.println("Aplicado hotline");
         setImagen(filtrada);
     }
 
     //kernel de 3x3
     private int kernelH(int[] colores){
-        int[] filtro={1,1,1,1,-1,-1,-1,-1,-1};
+        int[] filtro={0,0,0,0,1,0,0,0,0};
         int rojo=0,verde=0,azul=0;
         for(int i=0;i<9;i++){
             rojo+=Color.red(colores[i])*filtro[i];
             verde+=Color.green(colores[i])*filtro[i];
             azul+=Color.blue(colores[i])*filtro[i];
         }
-        return Color.rgb(rojo,verde,azul);
+        return Color.rgb(verde,rojo,azul);
     }
 
+    public void original(View view){
+        setImagen(this.imagen);
+    }
 
     private int max(int a, int b) {
         if (a > b) {
