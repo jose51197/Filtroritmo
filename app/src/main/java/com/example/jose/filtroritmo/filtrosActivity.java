@@ -86,7 +86,7 @@ public class filtrosActivity extends AppCompatActivity {
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
-            bytes[i+3]=color;
+            //bytes[i+3]=color;
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
@@ -108,7 +108,6 @@ public class filtrosActivity extends AppCompatActivity {
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
-            bytes[i+3]=color;
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
@@ -124,11 +123,10 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color = (byte) ((bytes[i+1] & 0xFF + bytes[i+2] & 0xFF + bytes[i] & 0xFF)/3);
+            color = (byte) (((bytes[i+1] & 0xFF) + (bytes[i+2] & 0xFF) + (bytes[i] & 0xFF))/3);
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
-            //bytes[i+3]=0;
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
@@ -148,7 +146,6 @@ public class filtrosActivity extends AppCompatActivity {
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
-            bytes[i+3]=color;
         }
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
