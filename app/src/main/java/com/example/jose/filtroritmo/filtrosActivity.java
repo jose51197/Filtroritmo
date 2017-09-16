@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
+import java.lang.Math;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -93,8 +93,6 @@ public class filtrosActivity extends AppCompatActivity {
         System.out.println("Aplicado dM");
         setImagen(filtrada);
     }
-
-
 
     public void dm(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
@@ -253,83 +251,89 @@ public class filtrosActivity extends AppCompatActivity {
     }
 
     public void gauss(View view) {
-        Bitmap testSubjectAlter = this.imagen.copy(this.imagen.getConfig(), true);
-        int altura = testSubjectAlter.getHeight();
-        int ancho = testSubjectAlter.getWidth();
+        Bitmap testSubject = this.imagen.copy(this.imagen.getConfig(), true);
+        int altura = testSubject.getHeight();
+        int ancho = testSubject.getWidth();
         int i;
         int j;
         int isuma;
         int jsuma;
         int sumaCampana;
-        int[] kernel = new int[9];
+        double []kernel=crearKernel(40);
+        int[] Fragmento = new int[25];
         for (i = 0; i < altura; i++) {
+            System.out.println("Aqui: "+String.valueOf(altura-i));
             for (j = 0; j < ancho; j++) {
-                jsuma = -2;
-                isuma = -1;
-                for (int q = 0; q < 9; q++) {
+                jsuma = -3;
+                isuma = -2;
+                for (int q = 0; q < 25; q++) {
                     jsuma++;
-                    if (jsuma == 2) {
-                        jsuma = -1;
+                    if (jsuma == 3) {
+                        jsuma = -2;
                         isuma++;
                     }
                     try {
-                        kernel[q] = this.imagen.getPixel(j + jsuma, i + isuma);
+                        Fragmento[q] = this.imagen.getPixel(j + jsuma, i + isuma);
                     } catch (Exception e) {
-                        kernel[q] = 0;
+                        Fragmento[q] = 0;
                     }
                 }
-                testSubjectAlter.setPixel(j, i, ejecutarKernel(kernel));
+                testSubject.setPixel(j, i, ejecutarKernel(Fragmento,kernel));
             }
         }
         System.out.println("Aplicado gauss");
-        setImagen(testSubjectAlter);
+        setImagen(testSubject);
     }
-    //retorna el color del pixel al aplicar gauss
-    private int ejecutarKernel(int[] kernel) {
-        int rojo = 0;
-        int azul = 0;
-        int verde = 0;
-        int[] kernelProcedure = new int[9];//lista donde termina resultado de cada pixel
-        kernelProcedure[0] = Color.red(kernel[0])<<2;
-        kernelProcedure[1] = Color.red(kernel[1])<<3;
-        kernelProcedure[2] = Color.red(kernel[2])<<2;
-        kernelProcedure[3] = Color.red(kernel[3]) <<3;
-        kernelProcedure[4] = Color.red(kernel[4]) <<4;
-        kernelProcedure[5] = Color.red(kernel[5]) <<3;
-        kernelProcedure[6] = Color.red(kernel[6])<<2;
-        kernelProcedure[7] = Color.red(kernel[7]) <<3;
-        kernelProcedure[8] = Color.red(kernel[8])<<2;
-        for (int i = 0; i < 9; i++) {
-            rojo += kernelProcedure[i];
+
+
+    private double[] crearKernel(double sigma){
+        double [] kernelResul  = new double[25];
+        int i=-3;
+        int j=-2;
+        double sum=0;
+        for(int q=0;q<25;q++){
+            i++;
+            if(i==3){
+                j++;
+                i=-2;
+            }
+            kernelResul[q]=((1/(2*Math.PI*Math.pow(sigma,2))) * Math.pow(Math.E,-((Math.pow(i,2)+Math.pow(j,2))/(2*Math.pow(sigma,2)))));
         }
-        rojo = rojo >>6;
-        kernelProcedure[0] = Color.green(kernel[0])<<2;
-        kernelProcedure[1] = Color.green(kernel[1]) <<3;
-        kernelProcedure[2] = Color.green(kernel[2])<<2;
-        kernelProcedure[3] = Color.green(kernel[3]) <<3;
-        kernelProcedure[4] = Color.green(kernel[4]) <<4;
-        kernelProcedure[5] = Color.green(kernel[5]) <<3;
-        kernelProcedure[6] = Color.green(kernel[6])<<2;
-        kernelProcedure[7] = Color.green(kernel[7]) <<3;
-        kernelProcedure[8] = Color.green(kernel[8])<<2;
-        for (int i = 0; i < 9; i++) {
-            verde += kernelProcedure[i];
+        for(int q=0;q<25;q++){
+            sum+=kernelResul[q];
         }
-        verde = verde >>6;
-        kernelProcedure[0] = Color.blue(kernel[0])<<2;
-        kernelProcedure[1] = Color.blue(kernel[1]) <<3;
-        kernelProcedure[2] = Color.blue(kernel[2])<<2;
-        kernelProcedure[3] = Color.blue(kernel[3]) <<3;
-        kernelProcedure[4] = Color.blue(kernel[4]) <<4;
-        kernelProcedure[5] = Color.blue(kernel[5]) <<3;
-        kernelProcedure[6] = Color.blue(kernel[6])<<2;
-        kernelProcedure[7] = Color.blue(kernel[7]) <<3;
-        kernelProcedure[8] = Color.blue(kernel[8])<<2;
-        for (int i = 0; i < 9; i++) {
-            azul += kernelProcedure[i];
+        for(int q=0;q<25;q++){
+            kernelResul[q]=kernelResul[q]*(1/sum);
         }
-        azul = azul >>6;
-        return Color.rgb(rojo, verde, azul);
+        return kernelResul;
+    }
+
+    private int ejecutarKernel(int[] kernelE,double[] kernel) {
+        double rojo = 0;
+        double azul = 0;
+        double verde = 0;
+        int divisor=0;
+        int k;
+        for (k=0;k<25;k++){
+            divisor+=kernel[k];
+        }
+        for(k=0;k<25;k++){
+            rojo += Color.red(kernelE[k])*kernel[k];
+        }
+        //rojo = rojo / divisor;
+        for(k=0;k<25;k++){
+            verde += Color.green(kernelE[k])*kernel[k];
+        }
+        //verde = verde / divisor;
+        for(k=0;k<25;k++){
+            azul += Color.blue(kernelE[k])*kernel[k];
+        }
+        //azul= azul / divisor;
+
+        int red=(int)rojo;
+        int green= (int)verde;
+        int blue=(int)azul;
+        return Color.rgb(red, green, blue);
     }
     public void guardarAmbas(View view) {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HH:mm:ss");
