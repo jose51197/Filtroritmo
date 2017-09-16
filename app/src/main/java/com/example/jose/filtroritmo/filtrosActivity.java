@@ -47,7 +47,7 @@ public class filtrosActivity extends AppCompatActivity {
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             //if (myBitmap.getHeight()>1920 || myBitmap.getWidth()>1920){
-                this.imagen =getResizedBitmap(myBitmap,1920);
+                this.imagen =myBitmap;
             //}
             setImagen(this.imagen);
         }
