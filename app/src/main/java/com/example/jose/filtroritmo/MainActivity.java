@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             filtro.putExtra("path",pictureImagePath);
             startActivity(filtro);
         }
-
         if(requestCode==SELECT_IMAGE && resultCode == RESULT_OK && data!=null){
             Uri imagenElegida = data.getData();
             pictureImagePath= getRealPathFromURI(imagenElegida);

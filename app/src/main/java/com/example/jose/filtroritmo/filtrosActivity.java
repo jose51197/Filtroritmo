@@ -132,7 +132,7 @@ public class filtrosActivity extends AppCompatActivity {
         setImagen(filtrada);
     }
 
-    //para quedar con todo al dia
+    //algoritmo de desaturacion
     public void desaturation(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
         int ancho = filtrada.getWidth();
@@ -167,10 +167,9 @@ public class filtrosActivity extends AppCompatActivity {
     }
 
     public void gauss(View view) {
-        Bitmap testSubject = this.imagen.copy(this.imagen.getConfig(), true);
         Bitmap testSubjectAlter = this.imagen.copy(this.imagen.getConfig(), true);
-        int altura = testSubject.getHeight();
-        int ancho = testSubject.getWidth();
+        int altura = testSubjectAlter.getHeight();
+        int ancho = testSubjectAlter.getWidth();
         int i;
         int j;
         int isuma;
@@ -189,7 +188,7 @@ public class filtrosActivity extends AppCompatActivity {
                         isuma++;
                     }
                     try {
-                        kernel[q] = testSubject.getPixel(j + jsuma, i + isuma);
+                        kernel[q] = this.imagen.getPixel(j + jsuma, i + isuma);
                     } catch (Exception e) {
                         kernel[q] = 0;
                     }
