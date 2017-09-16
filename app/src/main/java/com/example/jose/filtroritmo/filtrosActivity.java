@@ -142,7 +142,7 @@ public class filtrosActivity extends AppCompatActivity {
         byte[] bytes=buf.array();
         byte color;
         for (int i = 0; i < bytes.length; i+=4) {
-            color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF))) >> 1);
+            color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF))) >> 1);//un shift right es dividir por 2 #Asembler xD
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
@@ -151,6 +151,82 @@ public class filtrosActivity extends AppCompatActivity {
         filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado desaturation");
         setImagen(filtrada);
+    }
+    //maximo de los de alrededor
+    public void hotline(View view) {
+        Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
+        int altura = filtrada.getHeight();
+        int ancho=filtrada.getWidth();
+        int total=altura*ancho;
+
+        ByteBuffer buf = ByteBuffer.allocate(total*4);
+        filtrada.copyPixelsToBuffer(buf);
+        byte[] bytes=buf.array();
+        byte[] bytesFinales=buf.array().clone();
+        int color;
+        int[] kernel= new int[9];
+        for (int i = 0; i < bytes.length; i+=4) {
+            //bytes[i+1] & 0xFF
+            //if no es primera fila
+            if(i-ancho-2>0){//ya se que agarra pixeles incorrectos a veces, me vale xD es parte del filtro
+                kernel[0]=Color.rgb(bytes[i-ancho-4],bytes[i-ancho+1-4],bytes[i-ancho+2-4]);//pi-anchoxel
+                kernel[1]=Color.rgb(bytes[i-ancho],bytes[i-ancho+1],bytes[i-ancho+2]);//pi-anchoxel
+                kernel[2]=Color.rgb(bytes[i-ancho+4],bytes[i-ancho+1+4],bytes[i-ancho+2+4]);//pi-anchoxel
+            }
+            else{
+                kernel[0]=0;
+                kernel[1]=0;
+                kernel[2]=0;
+            }
+            if(i-4>0){
+                kernel[3]=Color.rgb(bytes[i-4],bytes[i+1-4],bytes[i+2-4]);//pixel iz
+            }
+            else{
+                kernel[3]=0;
+            }
+
+            kernel[4]=Color.rgb(bytes[i],bytes[i+1],bytes[i+2]);//pixel actual
+            if(i+2+4<total){
+                kernel[5]=Color.rgb(bytes[i+4],bytes[i+1+4],bytes[i+2+4]);//pixel der
+            }
+            else{
+                kernel[5]=0;
+            }
+
+
+            if(i+ancho+4+2<total){
+                kernel[6]=Color.rgb(bytes[i+ancho-4],bytes[i+ancho+1-4],bytes[i+ancho+2-4]);//pi+anchoxel
+                kernel[7]=Color.rgb(bytes[i+ancho],bytes[i+ancho+1],bytes[i+ancho+2]);//pi+anchoxel
+                kernel[8]=Color.rgb(bytes[i+ancho+4],bytes[i+ancho+1+4],bytes[i+ancho+2+4]);//pi+anchoxel
+            }
+            else{
+                kernel[6]=0;
+                kernel[7]=0;
+                kernel[8]=0;
+            }
+
+
+            color=kernelH(kernel);
+            bytesFinales[i]= (byte)Color.red(color);
+            bytesFinales[i+1]=(byte)Color.green(color);
+            bytesFinales[i+2]=(byte)Color.blue(color);
+        }
+        ByteBuffer retBuf = ByteBuffer.wrap(bytesFinales);
+        filtrada.copyPixelsFromBuffer(retBuf);
+        System.out.println("Aplicado desaturation");
+        setImagen(filtrada);
+    }
+
+    //kernel de 3x3
+    private int kernelH(int[] colores){
+        int[] filtro={1,1,1,1,-1,-1,-1,-1,-1};
+        int rojo=0,verde=0,azul=0;
+        for(int i=0;i<9;i++){
+            rojo+=Color.red(colores[i])*filtro[i];
+            verde+=Color.green(colores[i])*filtro[i];
+            azul+=Color.blue(colores[i])*filtro[i];
+        }
+        return Color.rgb(rojo,verde,azul);
     }
 
 
@@ -179,7 +255,6 @@ public class filtrosActivity extends AppCompatActivity {
         int sumaCampana;
         int[] kernel = new int[9];
         for (i = 0; i < altura; i++) {
-            System.out.println("Pussy: "+String.valueOf(altura-i));
             for (j = 0; j < ancho; j++) {
                 jsuma = -2;
                 isuma = -1;
