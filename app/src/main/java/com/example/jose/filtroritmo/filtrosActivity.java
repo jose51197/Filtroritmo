@@ -119,7 +119,7 @@ public class filtrosActivity extends AppCompatActivity {
         int actual;
         byte[] bytes;
         for (int i = 0; i < ancho; i++) {
-            System.out.println("holi"+String.valueOf(ancho-i));
+            System.out.println("AVG "+String.valueOf(ancho-i));
             for (int j = 0; j < altura; j++) {
                 actual = filtrada.getPixel(i, j);
                 bytes = ByteBuffer.allocate(4).putInt(actual).array();
@@ -132,7 +132,7 @@ public class filtrosActivity extends AppCompatActivity {
         setImagen(filtrada);
     }
 
-    //algoritmo de desaturacion
+    //
     public void desaturation(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
         int ancho = filtrada.getWidth();
@@ -143,7 +143,7 @@ public class filtrosActivity extends AppCompatActivity {
             for (int j = 0; j < altura; j++) {
                 actual = filtrada.getPixel(i, j);
                 bytes = ByteBuffer.allocate(4).putInt(actual).array();
-                actual = (max(max((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF)) + min(min((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF))) / 2;
+                actual = (max(max((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF)) + min(min((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF))) >> 1;
                 actual = Color.rgb(actual, actual, actual);
                 filtrada.setPixel(i, j, actual);
             }
@@ -199,51 +199,51 @@ public class filtrosActivity extends AppCompatActivity {
         System.out.println("Aplicado gauss");
         setImagen(testSubjectAlter);
     }
-
+    //retorna el color del pixel al aplicar gauss
     private int ejecutarKernel(int[] kernel) {
         int rojo = 0;
         int azul = 0;
         int verde = 0;
-        int[] kernelProcedure = new int[9];
-        kernelProcedure[0] = Color.red(kernel[0])*4;
-        kernelProcedure[1] = Color.red(kernel[1]) * 8;
-        kernelProcedure[2] = Color.red(kernel[2])*4;
-        kernelProcedure[3] = Color.red(kernel[3]) * 8;
-        kernelProcedure[4] = Color.red(kernel[4]) * 16;
-        kernelProcedure[5] = Color.red(kernel[5]) * 8;
-        kernelProcedure[6] = Color.red(kernel[6])*4;
-        kernelProcedure[7] = Color.red(kernel[7]) * 8;
-        kernelProcedure[8] = Color.red(kernel[8])*4;
+        int[] kernelProcedure = new int[9];//lista donde termina resultado de cada pixel
+        kernelProcedure[0] = Color.red(kernel[0])<<2;
+        kernelProcedure[1] = Color.red(kernel[1])<<3;
+        kernelProcedure[2] = Color.red(kernel[2])<<2;
+        kernelProcedure[3] = Color.red(kernel[3]) <<3;
+        kernelProcedure[4] = Color.red(kernel[4]) <<4;
+        kernelProcedure[5] = Color.red(kernel[5]) <<3;
+        kernelProcedure[6] = Color.red(kernel[6])<<2;
+        kernelProcedure[7] = Color.red(kernel[7]) <<3;
+        kernelProcedure[8] = Color.red(kernel[8])<<2;
         for (int i = 0; i < 9; i++) {
             rojo += kernelProcedure[i];
         }
-        rojo = rojo / 64;
-        kernelProcedure[0] = Color.green(kernel[0])*4;
-        kernelProcedure[1] = Color.green(kernel[1]) * 8;
-        kernelProcedure[2] = Color.green(kernel[2])*4;
-        kernelProcedure[3] = Color.green(kernel[3]) * 8;
-        kernelProcedure[4] = Color.green(kernel[4]) * 16;
-        kernelProcedure[5] = Color.green(kernel[5]) * 8;
-        kernelProcedure[6] = Color.green(kernel[6])*4;
-        kernelProcedure[7] = Color.green(kernel[7]) * 8;
-        kernelProcedure[8] = Color.green(kernel[8])*4;
+        rojo = rojo >>6;
+        kernelProcedure[0] = Color.green(kernel[0])<<2;
+        kernelProcedure[1] = Color.green(kernel[1]) <<3;
+        kernelProcedure[2] = Color.green(kernel[2])<<2;
+        kernelProcedure[3] = Color.green(kernel[3]) <<3;
+        kernelProcedure[4] = Color.green(kernel[4]) <<4;
+        kernelProcedure[5] = Color.green(kernel[5]) <<3;
+        kernelProcedure[6] = Color.green(kernel[6])<<2;
+        kernelProcedure[7] = Color.green(kernel[7]) <<3;
+        kernelProcedure[8] = Color.green(kernel[8])<<2;
         for (int i = 0; i < 9; i++) {
             verde += kernelProcedure[i];
         }
-        verde = verde / 64;
-        kernelProcedure[0] = Color.blue(kernel[0])*4;
-        kernelProcedure[1] = Color.blue(kernel[1]) * 8;
-        kernelProcedure[2] = Color.blue(kernel[2])*4;
-        kernelProcedure[3] = Color.blue(kernel[3]) * 8;
-        kernelProcedure[4] = Color.blue(kernel[4]) * 16;
-        kernelProcedure[5] = Color.blue(kernel[5]) * 8;
-        kernelProcedure[6] = Color.blue(kernel[6])*4;
-        kernelProcedure[7] = Color.blue(kernel[7]) * 8;
-        kernelProcedure[8] = Color.blue(kernel[8])*4;
+        verde = verde >>6;
+        kernelProcedure[0] = Color.blue(kernel[0])<<2;
+        kernelProcedure[1] = Color.blue(kernel[1]) <<3;
+        kernelProcedure[2] = Color.blue(kernel[2])<<2;
+        kernelProcedure[3] = Color.blue(kernel[3]) <<3;
+        kernelProcedure[4] = Color.blue(kernel[4]) <<4;
+        kernelProcedure[5] = Color.blue(kernel[5]) <<3;
+        kernelProcedure[6] = Color.blue(kernel[6])<<2;
+        kernelProcedure[7] = Color.blue(kernel[7]) <<3;
+        kernelProcedure[8] = Color.blue(kernel[8])<<2;
         for (int i = 0; i < 9; i++) {
             azul += kernelProcedure[i];
         }
-        azul = azul / 64;
+        azul = azul >>6;
         return Color.rgb(rojo, verde, azul);
     }
     public void guardarAmbas(View view) {
