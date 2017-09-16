@@ -76,100 +76,86 @@ public class filtrosActivity extends AppCompatActivity {
 
     public void dM(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
-        int ancho = filtrada.getWidth();
-        int altura = filtrada.getHeight();
-        int actual;
-        byte[] bytes;
-        System.out.println(String.valueOf(ancho)+","+String.valueOf(altura));
-        for (int i = 0; i < ancho; i++) {
-            System.out.println("desat"+String.valueOf(ancho-i));
-            Runnable r = new threadDM(filtrada,i);
-            new Thread(r).start();
+        ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
+        filtrada.copyPixelsToBuffer(buf);
+        byte[] bytes=buf.array();
+        byte color;
+        for (int i = 0; i < bytes.length; i+=4) {
+            color = (byte) max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF));
+            //System.out.println(String.valueOf(color));
+            bytes[i]= color;
+            bytes[i+1]=color;
+            bytes[i+2]=color;
+            bytes[i+3]=color;
         }
-        System.out.println("Aplicado desaturation");
+        ByteBuffer retBuf = ByteBuffer.wrap(bytes);
+        filtrada.copyPixelsFromBuffer(retBuf);
+        System.out.println("Aplicado dM");
         setImagen(filtrada);
     }
-    private class threadDM implements Runnable{
-        private Bitmap filtrada;
-        private int i;
-        @Override
-        public void run() {
-            int actual;
-            byte[] bytes;
-            for (int j = 0; j < filtrada.getHeight(); j++) {
-                actual = filtrada.getPixel(i, j);
-                bytes = ByteBuffer.allocate(4).putInt(actual).array();
-                actual = max(max((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF));
-                actual = Color.rgb(actual, actual, actual);
-                filtrada.setPixel(i, j, actual);
-            }
-        }
-        //puntero a imagen y el i
-        public threadDM(Bitmap filtrada, int i) {
-            this.filtrada=filtrada;
-            this.i=i;
-        }
-    }
+
+
 
     public void dm(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
-        int ancho = filtrada.getWidth();
-        int altura = filtrada.getHeight();
-        int actual;
-        byte[] bytes;
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < altura; j++) {
-                actual = filtrada.getPixel(i, j);
-                bytes = ByteBuffer.allocate(4).putInt(actual).array();
-                actual = min(min((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF));
-                actual = Color.rgb(actual, actual, actual);
-                filtrada.setPixel(i, j, actual);
-            }
+        ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
+        filtrada.copyPixelsToBuffer(buf);
+        byte[] bytes=buf.array();
+        byte color;
+        for (int i = 0; i < bytes.length; i+=4) {
+            color = (byte) min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF));
+            //System.out.println(String.valueOf(color));
+            bytes[i]= color;
+            bytes[i+1]=color;
+            bytes[i+2]=color;
+            bytes[i+3]=color;
         }
-        System.out.println("Aplicado desaturation");
+        ByteBuffer retBuf = ByteBuffer.wrap(bytes);
+        filtrada.copyPixelsFromBuffer(retBuf);
+        System.out.println("Aplicado dm");
         setImagen(filtrada);
     }
 
     //el mas facil y con el cual empezar
     public void average(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
-        int ancho = filtrada.getWidth();
-        int altura = filtrada.getHeight();
-        int actual;
-        byte[] bytes;
-        for (int i = 0; i < ancho; i++) {
-            System.out.println("AVG "+String.valueOf(ancho-i));
-            for (int j = 0; j < altura; j++) {
-                actual = filtrada.getPixel(i, j);
-                bytes = ByteBuffer.allocate(4).putInt(actual).array();
-                actual = ((bytes[3] & 0xFF) + (bytes[1] & 0xFF) + (bytes[2] & 0xFF)) / 3;
-                actual = Color.rgb(actual, actual, actual);
-                filtrada.setPixel(i, j, actual);
-            }
+        ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
+        filtrada.copyPixelsToBuffer(buf);
+        byte[] bytes=buf.array();
+        byte color;
+        for (int i = 0; i < bytes.length; i+=4) {
+            color = (byte) ((bytes[i+1] & 0xFF + bytes[i+2] & 0xFF + bytes[i+3] & 0xFF)-1/3);
+            bytes[i]= color;
+            bytes[i+1]=color;
+            bytes[i+2]=color;
+            bytes[i+3]=color;
         }
-        System.out.println("Aplicado average");
+        ByteBuffer retBuf = ByteBuffer.wrap(bytes);
+        filtrada.copyPixelsFromBuffer(retBuf);
+        System.out.println("Aplicado AVG");
         setImagen(filtrada);
     }
 
     //
     public void desaturation(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
-        int ancho = filtrada.getWidth();
-        int altura = filtrada.getHeight();
-        int actual;
-        byte[] bytes;
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < altura; j++) {
-                actual = filtrada.getPixel(i, j);
-                bytes = ByteBuffer.allocate(4).putInt(actual).array();
-                actual = (max(max((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF)) + min(min((bytes[3] & 0xFF), (bytes[1] & 0xFF)), (bytes[2] & 0xFF))) >> 1;
-                actual = Color.rgb(actual, actual, actual);
-                filtrada.setPixel(i, j, actual);
-            }
+        ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
+        filtrada.copyPixelsToBuffer(buf);
+        byte[] bytes=buf.array();
+        byte color;
+        for (int i = 0; i < bytes.length; i+=4) {
+            color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i+3] & 0xFF))) >> 1);
+            bytes[i]= color;
+            bytes[i+1]=color;
+            bytes[i+2]=color;
+            bytes[i+3]=color;
         }
+        ByteBuffer retBuf = ByteBuffer.wrap(bytes);
+        filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado desaturation");
         setImagen(filtrada);
     }
+
 
     private int max(int a, int b) {
         if (a > b) {
