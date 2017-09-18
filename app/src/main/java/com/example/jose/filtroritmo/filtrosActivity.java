@@ -152,86 +152,59 @@ public class filtrosActivity extends AppCompatActivity {
     }
     //maximo de los de alrededor
     public void hotline(View view) {
-        Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
-        int altura = filtrada.getHeight();
-        int ancho=filtrada.getWidth();
-        int total=altura*ancho;
-
-        ByteBuffer buf = ByteBuffer.allocate(total*4);
-        filtrada.copyPixelsToBuffer(buf);
-        byte[] bytes=buf.array();
-        byte[] bytesFinales=buf.array().clone();
+        Bitmap testSubject = this.imagen.copy(this.imagen.getConfig(), true);
+        int altura = testSubject.getHeight();
+        int ancho = testSubject.getWidth();
+        System.out.println("ancho= "+ancho+"  altura= "+altura);
+        System.out.println("Pixeles: "+(ancho*altura) );
+        long startTime = System.currentTimeMillis();
+        int i;
+        int j;
+        int isuma;
+        int jsuma;
         int color;
-        int[] kernel= new int[9];
-        int ianch;
-        int iancho;
+        double []kernel={-.1,-.1,-.1,-.1,1,-.1,-.1,-.1,-.1};
+        int[] Fragmento = new int[9];
+        for (i = 0; i < altura; i=i+3) {
+            for (j = 0; j < ancho; j=j+3) {
+                jsuma = -2;
+                isuma = -1;
+                for (int q = 0; q < 9; q++) {
+                    jsuma++;
+                    if (jsuma == 2) {
+                        jsuma = -1;
+                        isuma++;
+                    }
+                    try {
+                        Fragmento[q] = this.imagen.getPixel(j + jsuma, i + isuma);
+                    } catch (Exception e) {
+                        Fragmento[q] = 0;
+                    }
+                }
+                color= ejecutarKernel(Fragmento,kernel);
+                jsuma = -2;
+                isuma = -1;
+                for (int q = 0; q < 9; q++) {
+                    jsuma++;
+                    if (jsuma == 2) {
+                        jsuma = -1;
+                        isuma++;
+                    }
+                    try {
+                        testSubject.setPixel(j+jsuma, i+isuma, color);
+                    } catch (Exception e) {
 
-        for (int i = 0; i < bytes.length; i+=4) {
-            //bytes[i+1] & 0xFF
-            //if no es primera fila
-            ianch=i-ancho;
-            iancho=i+ancho;
-            if(ianch-4>0){//ya se que agarra pixeles incorrectos a veces, me vale xD es parte del filtro
-                kernel[0]=Color.rgb(bytes[ianch-4],bytes[ianch+1-4],bytes[ianch+2-4]);//pi-anchoxel
-                kernel[1]=Color.rgb(bytes[ianch],bytes[ianch+1],bytes[ianch+2]);//pi-anchoxel
-                kernel[2]=Color.rgb(bytes[ianch+4],bytes[ianch+1+4],bytes[ianch+2+4]);//pi-anchoxel
-            }
-            else{
-                kernel[0]=0;
-                kernel[1]=0;
-                kernel[2]=0;
-            }
-            if(i-4>0){
-                kernel[3]=Color.rgb(bytes[i-4],bytes[i+1-4],bytes[i+2-4]);//pixel iz
-            }
-            else{
-                kernel[3]=0;
-            }
+                    }
+                }
 
-            kernel[4]=Color.rgb((bytes[i] & 0xFF),(bytes[i+1] & 0xFF),(bytes[i+2] & 0xFF));//pixel actual
-
-            if(i+2+4<total){
-                kernel[5]=Color.rgb(bytes[i+4],bytes[i+1+4],bytes[i+2+4]);//pixel der
             }
-            else{
-                kernel[5]=0;
-            }
-
-
-            if(iancho+4+2<total){
-                kernel[6]=Color.rgb(bytes[iancho-4],bytes[iancho+1-4],bytes[iancho+2-4]);//pi+anchoxel
-                kernel[7]=Color.rgb(bytes[iancho],bytes[iancho+1],bytes[iancho+2]);//pi+anchoxel
-                kernel[8]=Color.rgb(bytes[iancho+4],bytes[iancho+1+4],bytes[iancho+2+4]);//pi+anchoxel
-            }
-            else{
-                kernel[6]=0;
-                kernel[7]=0;
-                kernel[8]=0;
-            }
-
-
-            color=kernelH(kernel);
-            bytesFinales[i]= (byte)Color.red(color);
-            bytesFinales[i+1]=(byte)Color.green(color);
-            bytesFinales[i+2]=(byte)Color.blue(color);
         }
-        ByteBuffer retBuf = ByteBuffer.wrap(bytesFinales);
-        filtrada.copyPixelsFromBuffer(retBuf);
-        System.out.println("Aplicado hotline");
-        setImagen(filtrada);
-    }
-
-    //kernel de 3x3
-    private int kernelH(int[] colores){
-        int[] filtro={0,0,0,0,1,0,0,0,0};
-        int rojo=0,verde=0,azul=0;
-        for(int i=0;i<9;i++){
-            rojo+=Color.red(colores[i])*filtro[i];
-            verde+=Color.green(colores[i])*filtro[i];
-            azul+=Color.blue(colores[i])*filtro[i];
-        }
-        return Color.rgb(verde,rojo,azul);
-    }
+        System.out.println("Aplicado gauss");
+        setImagen(testSubject);
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Duracion"+String.valueOf(totalTime));
+}
 
     public void original(View view){
         setImagen(this.imagen);
@@ -255,16 +228,18 @@ public class filtrosActivity extends AppCompatActivity {
         Bitmap testSubject = this.imagen.copy(this.imagen.getConfig(), true);
         int altura = testSubject.getHeight();
         int ancho = testSubject.getWidth();
+        System.out.println("ancho= "+ancho+"  altura= "+altura);
+        System.out.println("Pixeles: "+(ancho*altura) );
+        long startTime = System.currentTimeMillis();
         int i;
         int j;
         int isuma;
         int jsuma;
-        int sumaCampana;
+        int color;
         double []kernel=crearKernel(40);
         int[] Fragmento = new int[25];
-        for (i = 0; i < altura; i++) {
-            System.out.println("Aqui: "+String.valueOf(altura-i));
-            for (j = 0; j < ancho; j++) {
+        for (i = 0; i < altura; i=i+5) {
+            for (j = 0; j < ancho; j=j+5) {
                 jsuma = -3;
                 isuma = -2;
                 for (int q = 0; q < 25; q++) {
@@ -279,11 +254,29 @@ public class filtrosActivity extends AppCompatActivity {
                         Fragmento[q] = 0;
                     }
                 }
-                testSubject.setPixel(j, i, ejecutarKernel(Fragmento,kernel));
+                color= ejecutarKernel(Fragmento,kernel);
+                jsuma = -3;
+                isuma = -2;
+                for (int q = 0; q < 25; q++) {
+                    jsuma++;
+                    if (jsuma == 3) {
+                        jsuma = -2;
+                        isuma++;
+                    }
+                    try {
+                        testSubject.setPixel(j+jsuma, i+isuma, color);
+                    } catch (Exception e) {
+
+                    }
+                }
+
             }
         }
         System.out.println("Aplicado gauss");
         setImagen(testSubject);
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Duracion"+String.valueOf(totalTime));
     }
 
 
@@ -310,31 +303,35 @@ public class filtrosActivity extends AppCompatActivity {
     }
 
     private int ejecutarKernel(int[] kernelE,double[] kernel) {
+        int tamanho =kernel.length;
         double rojo = 0;
         double azul = 0;
         double verde = 0;
-        int divisor=0;
         int k;
-        for (k=0;k<25;k++){
-            divisor+=kernel[k];
-        }
-        for(k=0;k<25;k++){
+        for(k=0;k<tamanho;k++){
             rojo += Color.red(kernelE[k])*kernel[k];
         }
-        //rojo = rojo / divisor;
-        for(k=0;k<25;k++){
+        for(k=0;k<tamanho;k++){
             verde += Color.green(kernelE[k])*kernel[k];
         }
-        //verde = verde / divisor;
-        for(k=0;k<25;k++){
+        for(k=0;k<tamanho;k++){
             azul += Color.blue(kernelE[k])*kernel[k];
         }
-        //azul= azul / divisor;
 
         int red=(int)rojo;
         int green= (int)verde;
         int blue=(int)azul;
         return Color.rgb(red, green, blue);
+    }
+
+    private int ejecutarKernel(int[] kernelE,int[] kernel) {
+        int tamanho =kernel.length;
+        int color = 0;
+        int k;
+        for(k=0;k<tamanho;k++){
+            color += kernelE[k]*kernel[k];
+        }
+        return color;
     }
     public void guardarAmbas(View view) {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HH:mm:ss");
