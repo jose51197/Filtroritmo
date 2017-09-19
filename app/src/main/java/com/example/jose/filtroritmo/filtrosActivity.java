@@ -79,7 +79,7 @@ public class filtrosActivity extends AppCompatActivity {
         ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
         filtrada.copyPixelsToBuffer(buf);
         byte[] bytes=buf.array();
-        byte color;
+        byte color;long startTime = System.currentTimeMillis();
         for (int i = 0; i < bytes.length; i+=4) {
             color = (byte) max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF));
             //System.out.println(String.valueOf(color));
@@ -88,6 +88,10 @@ public class filtrosActivity extends AppCompatActivity {
             bytes[i+2]=color;
             //bytes[i+3]=color;
         }
+
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime);
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado dM");
@@ -99,7 +103,7 @@ public class filtrosActivity extends AppCompatActivity {
         ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
         filtrada.copyPixelsToBuffer(buf);
         byte[] bytes=buf.array();
-        byte color;
+        byte color; long startTime = System.currentTimeMillis();
         for (int i = 0; i < bytes.length; i+=4) {
             color = (byte) min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF));
             //System.out.println(String.valueOf(color));
@@ -107,25 +111,35 @@ public class filtrosActivity extends AppCompatActivity {
             bytes[i+1]=color;
             bytes[i+2]=color;
         }
+
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime);
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado dm");
         setImagen(filtrada);
     }
-
+    public void emergencia(View view){
+        this.imagen=getResizedBitmap(this.imagen,1920);
+    }
     //el mas facil y con el cual empezar
     public void average(View view) {
         Bitmap filtrada = this.imagen.copy(this.imagen.getConfig(), true);
         ByteBuffer buf = ByteBuffer.allocate(filtrada.getHeight()*filtrada.getWidth()*4);
         filtrada.copyPixelsToBuffer(buf);
         byte[] bytes=buf.array();
-        byte color;
+        byte color;long startTime = System.currentTimeMillis();
         for (int i = 0; i < bytes.length; i+=4) {
             color = (byte) (((bytes[i+1] & 0xFF) + (bytes[i+2] & 0xFF) + (bytes[i] & 0xFF))/3);
             bytes[i]= color;//rojo
             bytes[i+1]=color;//verde
             bytes[i+2]=color;//azul
         }
+
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime);
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado AVG");
@@ -139,12 +153,16 @@ public class filtrosActivity extends AppCompatActivity {
         filtrada.copyPixelsToBuffer(buf);
         byte[] bytes=buf.array();
         byte color;
+        long startTime = System.currentTimeMillis();
         for (int i = 0; i < bytes.length; i+=4) {
             color =(byte) ((max(max((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF)) + min(min((bytes[i+1] & 0xFF), (bytes[i+2] & 0xFF)), (bytes[i] & 0xFF))) >> 1);//un shift right es dividir por 2 #Asembler xD
             bytes[i]= color;
             bytes[i+1]=color;
             bytes[i+2]=color;
         }
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime);
         ByteBuffer retBuf = ByteBuffer.wrap(bytes);
         filtrada.copyPixelsFromBuffer(retBuf);
         System.out.println("Aplicado desaturation");
