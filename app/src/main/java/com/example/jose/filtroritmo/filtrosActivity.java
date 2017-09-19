@@ -121,7 +121,7 @@ public class filtrosActivity extends AppCompatActivity {
         setImagen(filtrada);
     }
     public void emergencia(View view){
-        this.imagen=getResizedBitmap(this.imagen,1920);
+        this.imagen=getResizedBitmap(this.imagen,1080);
     }
     //el mas facil y con el cual empezar
     public void average(View view) {
